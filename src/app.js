@@ -28,6 +28,7 @@ import userRouter from "./routes/user.routes.js";
 // routes declaration
 app.use("/api/v1/users" , userRouter)
 
+
 // http:localhost:8000//api/v1/users/register => it will redirect the register ... as it will redirect to userRoutes and further things are define there
 
 

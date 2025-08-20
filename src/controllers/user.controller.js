@@ -24,7 +24,7 @@ if([fullname , email , username , passward].some((field)=>
     throw new apiError(400, "all fields are required")
 }
 
-const existedUser = User.findOne({
+const existedUser =  await User.findOne({
     $or: [{ username } , { email }]
 })
 
@@ -32,9 +32,15 @@ if(existedUser){
      throw new apiError(400, "User with this username already exist")
 }
 
-const avatarLocalPath = req.files?.avatar[0]?.path;
-const coverImageLocalPath = req.files?.coverImage[0]?.path;
 
+const avatarLocalPath = req.files?.avatar[0]?.path;
+//const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+
+let coverImageLocalPath;
+if(req.files && Array.isArray(req.files.coverImage)&& req.files.coverImage.length>0){
+    coverImageLocalPath = req.files.coverImage[0].path
+}
 if(!avatarLocalPath){
      throw new apiError(400, "avatar is required")
 }

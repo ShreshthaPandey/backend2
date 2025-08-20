@@ -12,11 +12,20 @@ username: {
     index:true // it make it search able ...app aram se search kr skte ho
 
 },
+fullName:{
+    type:String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    index:true 
+},
 email: {
     type: String,
     required: true,
     trim: true,
-    index: true
+    index: true,
+    unique: true
 },
 avatar: { 
     type: String, // cloudinary url
@@ -30,9 +39,9 @@ watchHistory: [{
     type: Schema.Types.ObjectId,
     ref: "Video"
 }],
-passward:{
+password:{
     type: String,
-    required: [true, 'passward is required']
+    required: [true, 'password is required']
 },
 refreshToken: {
     type: String
@@ -43,15 +52,15 @@ refreshToken: {
     timestamps: true
 })
 userSchema.pre("save", async function (next) {
-    if(! this.isModified("passward")) return next();
+    if(! this.isModified("password")) return next();
 
-    this.passward =  await bcrypt.hash(this.passward, 10)
+    this.password =  await bcrypt.hash(this.password, 10)
     next()
 
 })
 
-userSchema.methods.isPasswardCorrect = async function (passward){
-    return await bcrypt.compare(passward, this.passward)
+userSchema.methods.isPasswordCorrect = async function (password){
+    return await bcrypt.compare(password, this.password)
 }
 
 userSchema.methods.generateAccessToken = function (){
@@ -59,7 +68,7 @@ userSchema.methods.generateAccessToken = function (){
         _id: this._id,
         email: this.email,
         username: this.username,
-        fullname: this.fullname
+        fullName: this.fullName
         
     },
     process.env.ACCESS_TOKEN_SECRET,
